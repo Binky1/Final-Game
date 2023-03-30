@@ -1,0 +1,60 @@
+{"frames": {
+
+"__Boxing04_PunchLeft_000.png":
+{
+	"frame": {"x":0,"y":0,"w":499,"h":489},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":499,"h":489},
+	"sourceSize": {"w":499,"h":489}
+},
+"__Boxing04_PunchLeft_001.png":
+{
+	"frame": {"x":499,"y":0,"w":499,"h":489},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":499,"h":489},
+	"sourceSize": {"w":499,"h":489}
+},
+"__Boxing04_PunchLeft_002.png":
+{
+	"frame": {"x":0,"y":489,"w":499,"h":489},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":499,"h":489},
+	"sourceSize": {"w":499,"h":489}
+},
+"__Boxing04_PunchLeft_003.png":
+{
+	"frame": {"x":499,"y":489,"w":499,"h":489},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":499,"h":489},
+	"sourceSize": {"w":499,"h":489}
+},
+"__Boxing04_PunchLeft_004.png":
+{
+	"frame": {"x":0,"y":978,"w":499,"h":489},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":499,"h":489},
+	"sourceSize": {"w":499,"h":489}
+},
+"__Boxing04_PunchLeft_005.png":
+{
+	"frame": {"x":499,"y":978,"w":499,"h":489},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":499,"h":489},
+	"sourceSize": {"w":499,"h":489}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "punchleft.png",
+	"format": "RGBA8888",
+	"size": {"w":998,"h":1467},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:efe04f3e53802b86a5faecd57fbbe8ea:5784f92491df3a54eeee2820dcc6ba46:24c5b3788431eac891a0caa129e23d13$"
+}
+}
