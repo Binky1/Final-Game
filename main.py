@@ -7,7 +7,7 @@ from Player import Player
 
 pygame.init()
  
-fps = 25
+fps = 30
 fpsClock = pygame.time.Clock()
  
 width, height = 1300, 800
@@ -16,13 +16,12 @@ screen.fill((255, 255, 255))
 
 p = Player()
 
-idle_generator = p.idle_player(screen)
-punchleft_generator = p.punchleft_player()
-walkright_generator = p.walkright_player()
+
 
 queue = []
 
-running = False
+runningR = False # running right
+runningL = False # running Left
 
 
 def main():
@@ -35,41 +34,64 @@ def main():
                 pygame.quit()
                 sys.exit()
             elif event.type == KEYDOWN:
-                if event.key == pygame.K_a:
+                if event.key == pygame.K_k:
                     global queue
                     queue = []
-                    image = next(punchleft_generator)
+                    image = p.get_next(p.punchleft_generator)
                     image = pygame.transform.scale(image, (299, 299))
                     screen.blit(image, (p.xpos, p.ypos))
-                    queue.append(next(punchleft_generator))
-                    queue.append(next(punchleft_generator))
-                    queue.append(next(punchleft_generator))
-                    queue.append(next(punchleft_generator))
-                    queue.append(next(punchleft_generator))
+                    queue.append(p.get_next(p.punchleft_generator))
+                    queue.append(p.get_next(p.punchleft_generator))
+                    queue.append(p.get_next(p.punchleft_generator))
+                    queue.append(p.get_next(p.punchleft_generator))
+                    queue.append(p.get_next(p.punchleft_generator))
                     pygame.display.flip()
                     fpsClock.tick(fps)
                     continue
                 elif event.key == pygame.K_d:
+
                     print(queue)
                     queue = []
-                    image = next(walkright_generator)
+                    # image = next(walkright_generator)
+                    image = p.get_next(p.walkright_generator)
                     image = pygame.transform.scale(image, (299, 299))
                     screen.blit(image, (p.xpos, p.ypos))
-                    global running
-                    running = True
+                    global runningR
+                    global runningL
+                    runningR = True
+                    runningL = False
+                    pygame.display.flip()
+                    fpsClock.tick(fps)
+                    continue
+                elif event.key == pygame.K_a:
+                    
+                    queue = []
+                    image = p.get_next(p.walkleft_generator)
+                    image = pygame.transform.scale(image, (299, 299))
+                    screen.blit(image, (p.xpos, p.ypos))
+
+                    runningL = True
+                    runningR = False
+                    
                     pygame.display.flip()
                     fpsClock.tick(fps)
                     continue
             elif event.type == KEYUP:
                 if event.key == K_d:
-                    running = False
+                    runningR = False
+                elif event.key == K_a:
+                    runningL = False
 
             # else:
             #     image = next(idle_generator)
             #     screen.blit(image, (100, 50))
 
-        if running:
-            image = next(walkright_generator)
+        if runningR:
+            image = p.get_next(p.walkright_generator)
+            image = pygame.transform.scale(image, (299, 299))        
+            screen.blit(image, (p.xpos, p.ypos))
+        elif runningL:
+            image = p.get_next(p.walkleft_generator)
             image = pygame.transform.scale(image, (299, 299))           
             screen.blit(image, (p.xpos, p.ypos))
         elif len(queue) != 0:
@@ -77,7 +99,7 @@ def main():
             image = pygame.transform.scale(image, (299, 299))
             screen.blit(image, (p.xpos, p.ypos))
         else:
-            image = next(idle_generator)
+            image = p.get_next(p.idle_generator)
             image = pygame.transform.scale(image, (299, 299))
             screen.blit(image, (p.xpos, p.ypos))
 
