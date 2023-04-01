@@ -15,9 +15,12 @@ class Player:
         self.walkright = [self.sprite.parse_sprite('__Boxing04_Walk_000.png'), self.sprite.parse_sprite('__Boxing04_Walk_001.png'), self.sprite.parse_sprite('__Boxing04_Walk_002.png'),self.sprite.parse_sprite('__Boxing04_Walk_003.png'), self.sprite.parse_sprite('__Boxing04_Walk_004.png'),self.sprite.parse_sprite('__Boxing04_Walk_005.png'), self.sprite.parse_sprite('__Boxing04_Walk_006.png'), self.sprite.parse_sprite('__Boxing04_Walk_007.png'), self.sprite.parse_sprite('__Boxing04_Walk_008.png'),self.sprite.parse_sprite('__Boxing04_Walk_009.png')]
         self.sprite = Spritesheet('walkback.png')
         self.walkleft = [self.sprite.parse_sprite('__Boxing04_WalkBack_000.png'), self.sprite.parse_sprite('__Boxing04_WalkBack_001.png'), self.sprite.parse_sprite('__Boxing04_WalkBack_002.png'),self.sprite.parse_sprite('__Boxing04_WalkBack_003.png'), self.sprite.parse_sprite('__Boxing04_WalkBack_004.png'),self.sprite.parse_sprite('__Boxing04_WalkBack_005.png'), self.sprite.parse_sprite('__Boxing04_WalkBack_006.png'), self.sprite.parse_sprite('__Boxing04_WalkBack_007.png'), self.sprite.parse_sprite('__Boxing04_WalkBack_008.png'),self.sprite.parse_sprite('__Boxing04_WalkBack_009.png')]
+        print(type(self.sprite))
 
+        self.runningL = False
+        self.runningR = False
 
-
+        self.queue = []
 
 
 
@@ -26,6 +29,58 @@ class Player:
         self.walkleft_generator = self.walkleft_player()
         self.idle_generator = self.idle_player()
         self.punchleft_generator = self.punchleft_player()
+
+    def walk_back(self, screen):
+        self.queue = []
+        image = self.get_next(self.walkleft_generator)
+        image = pygame.transform.scale(image, (299, 299))
+        screen.blit(image, (self.xpos, self.ypos))
+
+        self.runningL = True
+        self.runningR = False
+        
+    def key_up(self):
+        self.runningL = False
+        self.runningR = False
+    
+    def walkright_sprite(self, screen): 
+        self.queue = []
+        self.runningR = True
+        self.runningL = False
+        image = self.get_next(self.walkright_generator)
+        image = pygame.transform.scale(image, (299, 299))
+        screen.blit(image, (self.xpos, self.ypos))
+
+    
+    
+    def punchleft_sprite(self, screen):
+        self.queue = []
+        image = self.get_next(self.punchleft_generator)
+        image = pygame.transform.scale(image, (299, 299))
+        screen.blit(image, (self.xpos, self.ypos))
+        self.queue.append(self.get_next(self.punchleft_generator))
+        self.queue.append(self.get_next(self.punchleft_generator))
+        self.queue.append(self.get_next(self.punchleft_generator))
+        self.queue.append(self.get_next(self.punchleft_generator))
+        self.queue.append(self.get_next(self.punchleft_generator))
+
+    def draw_player_frame(self, screen):
+        if self.runningR:
+            image = self.get_next(self.walkright_generator)
+            image = pygame.transform.scale(image, (299, 299))        
+            screen.blit(image, (self.xpos, self.ypos))
+        elif self.runningL:
+            image = self.get_next(self.walkleft_generator)
+            image = pygame.transform.scale(image, (299, 299))           
+            screen.blit(image, (self.xpos, self.ypos))
+        elif len(self.queue) != 0:
+            image = self.queue.pop(0)
+            image = pygame.transform.scale(image, (299, 299))
+            screen.blit(image, (self.xpos, self.ypos))
+        else:
+            image = self.get_next(self.idle_generator)
+            image = pygame.transform.scale(image, (299, 299))
+            screen.blit(image, (self.xpos, self.ypos))
 
         
     

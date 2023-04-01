@@ -1,109 +1,61 @@
 import os, sys, time
 import pygame
+import pickle
 
 from pygame.locals import *
 from Player import Player
 
+import socket
+import tcp_by_size
+
 
 pygame.init()
  
-fps = 30
+fps = 25
 fpsClock = pygame.time.Clock()
  
 width, height = 1300, 800
 screen = pygame.display.set_mode((width, height))
 screen.fill((255, 255, 255))
 
+sock = socket.socket()
+sock.connect(("127.0.0.1", 8000))
+
 p = Player()
-
-
-
+p2 = Player()
 queue = []
 
-runningR = False # running right
-runningL = False # running Left
+
+
+def draw_screen(screen, p, p2):
+    p.draw_player_frame(screen)
+    p2.draw_player_frame(screen)
+    pygame.display.update()
+
 
 
 def main():
     # Game loop.
     while True:
-        screen.fill((255, 255, 255))
-        
+        screen.fill((0, 0, 0))
+        #send_player(p)
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
             elif event.type == KEYDOWN:
                 if event.key == pygame.K_k:
-                    global queue
-                    queue = []
-                    image = p.get_next(p.punchleft_generator)
-                    image = pygame.transform.scale(image, (299, 299))
-                    screen.blit(image, (p.xpos, p.ypos))
-                    queue.append(p.get_next(p.punchleft_generator))
-                    queue.append(p.get_next(p.punchleft_generator))
-                    queue.append(p.get_next(p.punchleft_generator))
-                    queue.append(p.get_next(p.punchleft_generator))
-                    queue.append(p.get_next(p.punchleft_generator))
-                    pygame.display.flip()
-                    fpsClock.tick(fps)
-                    continue
+                    p.punchleft_sprite(screen)
                 elif event.key == pygame.K_d:
-
-                    print(queue)
-                    queue = []
-                    # image = next(walkright_generator)
-                    image = p.get_next(p.walkright_generator)
-                    image = pygame.transform.scale(image, (299, 299))
-                    screen.blit(image, (p.xpos, p.ypos))
-                    global runningR
-                    global runningL
-                    runningR = True
-                    runningL = False
-                    pygame.display.flip()
-                    fpsClock.tick(fps)
-                    continue
+                    p.walkright_sprite(screen)
                 elif event.key == pygame.K_a:
-                    
-                    queue = []
-                    image = p.get_next(p.walkleft_generator)
-                    image = pygame.transform.scale(image, (299, 299))
-                    screen.blit(image, (p.xpos, p.ypos))
+                    p.walk_back(screen)
 
-                    runningL = True
-                    runningR = False
-                    
-                    pygame.display.flip()
-                    fpsClock.tick(fps)
-                    continue
             elif event.type == KEYUP:
-                if event.key == K_d:
-                    runningR = False
-                elif event.key == K_a:
-                    runningL = False
+                p.key_up()
 
-            # else:
-            #     image = next(idle_generator)
-            #     screen.blit(image, (100, 50))
-
-        if runningR:
-            image = p.get_next(p.walkright_generator)
-            image = pygame.transform.scale(image, (299, 299))        
-            screen.blit(image, (p.xpos, p.ypos))
-        elif runningL:
-            image = p.get_next(p.walkleft_generator)
-            image = pygame.transform.scale(image, (299, 299))           
-            screen.blit(image, (p.xpos, p.ypos))
-        elif len(queue) != 0:
-            image = queue.pop(0)
-            image = pygame.transform.scale(image, (299, 299))
-            screen.blit(image, (p.xpos, p.ypos))
-        else:
-            image = p.get_next(p.idle_generator)
-            image = pygame.transform.scale(image, (299, 299))
-            screen.blit(image, (p.xpos, p.ypos))
-
-        pygame.display.flip()
+            
+        draw_screen(screen, p, p2)
         fpsClock.tick(fps)
         
     
