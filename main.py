@@ -39,6 +39,8 @@ def parse_protocol(p2, data, screen):
         p2.punchleft_sprite(screen)
     elif data == 'moveright':
         p2.walkright_sprite(screen)
+    elif data == 'moveleft':
+        p2.walk_back(screen)
     else:
         p2.key_up()
 

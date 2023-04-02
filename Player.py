@@ -1,12 +1,13 @@
 import pygame
 from spritesheet import Spritesheet
+import pickle
 
 class Player:
 
-    def __init__(self):
+    def __init__(self, xpos=80, ypos=500, enemy = False):
         # xy pos, sprites for movement
-        self.xpos = 80
-        self.ypos = 500
+        self.xpos = xpos
+        self.ypos = ypos
         self.sprite = Spritesheet('idle.png')
         self.idle = [self.sprite.parse_sprite('__Boxing04_Idle_000.png'), self.sprite.parse_sprite('__Boxing04_Idle_001.png'), self.sprite.parse_sprite('__Boxing04_Idle_002.png'),self.sprite.parse_sprite('__Boxing04_Idle_003.png'), self.sprite.parse_sprite('__Boxing04_Idle_004.png'),self.sprite.parse_sprite('__Boxing04_Idle_005.png'), self.sprite.parse_sprite('__Boxing04_Idle_006.png'),  self.sprite.parse_sprite('__Boxing04_Idle_007.png'), self.sprite.parse_sprite('__Boxing04_Idle_008.png'), self.sprite.parse_sprite('__Boxing04_Idle_009.png')]
         self.sprite = Spritesheet('punchleft.png')
@@ -15,11 +16,10 @@ class Player:
         self.walkright = [self.sprite.parse_sprite('__Boxing04_Walk_000.png'), self.sprite.parse_sprite('__Boxing04_Walk_001.png'), self.sprite.parse_sprite('__Boxing04_Walk_002.png'),self.sprite.parse_sprite('__Boxing04_Walk_003.png'), self.sprite.parse_sprite('__Boxing04_Walk_004.png'),self.sprite.parse_sprite('__Boxing04_Walk_005.png'), self.sprite.parse_sprite('__Boxing04_Walk_006.png'), self.sprite.parse_sprite('__Boxing04_Walk_007.png'), self.sprite.parse_sprite('__Boxing04_Walk_008.png'),self.sprite.parse_sprite('__Boxing04_Walk_009.png')]
         self.sprite = Spritesheet('walkback.png')
         self.walkleft = [self.sprite.parse_sprite('__Boxing04_WalkBack_000.png'), self.sprite.parse_sprite('__Boxing04_WalkBack_001.png'), self.sprite.parse_sprite('__Boxing04_WalkBack_002.png'),self.sprite.parse_sprite('__Boxing04_WalkBack_003.png'), self.sprite.parse_sprite('__Boxing04_WalkBack_004.png'),self.sprite.parse_sprite('__Boxing04_WalkBack_005.png'), self.sprite.parse_sprite('__Boxing04_WalkBack_006.png'), self.sprite.parse_sprite('__Boxing04_WalkBack_007.png'), self.sprite.parse_sprite('__Boxing04_WalkBack_008.png'),self.sprite.parse_sprite('__Boxing04_WalkBack_009.png')]
-        print(type(self.sprite))
-
         self.runningL = False
         self.runningR = False
 
+        self.enemy = enemy
         self.queue = []
 
 
@@ -30,10 +30,14 @@ class Player:
         self.idle_generator = self.idle_player()
         self.punchleft_generator = self.punchleft_player()
 
+        
+        
     def walk_back(self, screen):
         self.queue = []
         image = self.get_next(self.walkleft_generator)
         image = pygame.transform.scale(image, (299, 299))
+        if self.enemy:
+            image = pygame.transform.flip(image,True, False)
         screen.blit(image, (self.xpos, self.ypos))
 
         self.runningL = True
@@ -49,6 +53,8 @@ class Player:
         self.runningL = False
         image = self.get_next(self.walkright_generator)
         image = pygame.transform.scale(image, (299, 299))
+        if self.enemy:
+            image = pygame.transform.flip(image,True, False)   
         screen.blit(image, (self.xpos, self.ypos))
 
     
@@ -57,6 +63,9 @@ class Player:
         self.queue = []
         image = self.get_next(self.punchleft_generator)
         image = pygame.transform.scale(image, (299, 299))
+        if self.enemy:
+            image = pygame.transform.flip(image,True, False)   
+
         screen.blit(image, (self.xpos, self.ypos))
         self.queue.append(self.get_next(self.punchleft_generator))
         self.queue.append(self.get_next(self.punchleft_generator))
@@ -68,21 +77,23 @@ class Player:
         if self.runningR:
             image = self.get_next(self.walkright_generator)
             image = pygame.transform.scale(image, (299, 299))        
-            screen.blit(image, (self.xpos, self.ypos))
+            
         elif self.runningL:
             image = self.get_next(self.walkleft_generator)
             image = pygame.transform.scale(image, (299, 299))           
-            screen.blit(image, (self.xpos, self.ypos))
+            
         elif len(self.queue) != 0:
             image = self.queue.pop(0)
             image = pygame.transform.scale(image, (299, 299))
-            screen.blit(image, (self.xpos, self.ypos))
+            
         else:
             image = self.get_next(self.idle_generator)
             image = pygame.transform.scale(image, (299, 299))
-            screen.blit(image, (self.xpos, self.ypos))
 
-        
+        if self.enemy:
+            image = pygame.transform.flip(image,True, False)   
+        screen.blit(image, (self.xpos, self.ypos))
+
     
     def get_next(self, var):
         return next(var)
@@ -93,8 +104,11 @@ class Player:
         while i < len(self.walkleft):
             #screen.blit(self.idle[i], (100, 50))
             print(self.xpos)
-            if self.xpos - 3 > 0:
+            if self.xpos - 3 > 0 and self.enemy == False:
                 self.xpos -=3
+                print(self.xpos)
+            elif self.xpos +  3 < 700 and self.enemy == True:
+                self.xpos +=3
                 print(self.xpos)
             yield self.walkleft[i]
             i = (i + 1) % len(self.walkleft)
@@ -103,9 +117,10 @@ class Player:
         i = 0
         while i < len(self.walkright):
             #screen.blit(self.idle[i], (100, 50))
-            if self.xpos + 6 < 1064:
+            if self.xpos + 6 < 1064 and self.enemy == False:
                 self.xpos +=6
-                print(self.xpos)
+            elif self.xpos - 6 > 0 and self.enemy == True:
+                self.xpos -=6
             yield self.walkright[i]
             i = (i + 1) % len(self.walkright)
 
