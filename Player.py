@@ -8,6 +8,7 @@ class Player:
         # xy pos, sprites for movement
         self.xpos = xpos
         self.ypos = ypos
+        self.health = 100
         self.sprite = Spritesheet('idle.png')
         self.idle = [self.sprite.parse_sprite('__Boxing04_Idle_000.png'), self.sprite.parse_sprite('__Boxing04_Idle_001.png'), self.sprite.parse_sprite('__Boxing04_Idle_002.png'),self.sprite.parse_sprite('__Boxing04_Idle_003.png'), self.sprite.parse_sprite('__Boxing04_Idle_004.png'),self.sprite.parse_sprite('__Boxing04_Idle_005.png'), self.sprite.parse_sprite('__Boxing04_Idle_006.png'),  self.sprite.parse_sprite('__Boxing04_Idle_007.png'), self.sprite.parse_sprite('__Boxing04_Idle_008.png'), self.sprite.parse_sprite('__Boxing04_Idle_009.png')]
         self.sprite = Spritesheet('punchleft.png')
@@ -103,13 +104,10 @@ class Player:
         i = 0
         while i < len(self.walkleft):
             #screen.blit(self.idle[i], (100, 50))
-            print(self.xpos)
             if self.xpos - 3 > 0 and self.enemy == False:
                 self.xpos -=3
-                print(self.xpos)
-            elif self.xpos +  3 < 700 and self.enemy == True:
+            elif self.xpos +  3 < 800 and self.enemy == True:
                 self.xpos +=3
-                print(self.xpos)
             yield self.walkleft[i]
             i = (i + 1) % len(self.walkleft)
 
@@ -117,12 +115,13 @@ class Player:
         i = 0
         while i < len(self.walkright):
             #screen.blit(self.idle[i], (100, 50))
-            if self.xpos + 6 < 1064 and self.enemy == False:
+            if self.xpos + 6 < 800 and self.enemy == False:
                 self.xpos +=6
-            elif self.xpos - 6 > 0 and self.enemy == True:
-                self.xpos -=6
+            elif self.xpos - 3 > 0 and self.enemy == True:
+                self.xpos -=3
             yield self.walkright[i]
             i = (i + 1) % len(self.walkright)
+            print(i)
 
 
     def punchleft_player(self):
@@ -131,6 +130,7 @@ class Player:
             #screen.blit(self.idle[i], (100, 50))
             yield self.punchleft[i]
             i = (i + 1) % len(self.punchleft)
+            print(i)
 
     def idle_player(self):
         i = 0
