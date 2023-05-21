@@ -1,11 +1,12 @@
 import pygame
 from spritesheet import Spritesheet
-import pickle
 
 class Player:
 
-    def __init__(self, xpos=80, ypos=500, enemy = False):
+    def __init__(self, xpos=-120, ypos=500, enemy = False):
         # xy pos, sprites for movement
+        self.size = 120
+
         self.xpos = xpos
         self.ypos = ypos
         self.health = 100
@@ -31,15 +32,15 @@ class Player:
         self.idle_generator = self.idle_player()
         self.punchleft_generator = self.punchleft_player()
 
-        
-        
+
+
     def walk_back(self, screen):
         self.queue = []
-        image = self.get_next(self.walkleft_generator)
-        image = pygame.transform.scale(image, (299, 299))
-        if self.enemy:
-            image = pygame.transform.flip(image,True, False)
-        screen.blit(image, (self.xpos, self.ypos))
+        # image = self.get_next(self.walkleft_generator)
+        # image = pygame.transform.scale(image, (299, 299))
+        # if self.enemy:
+        #     image = pygame.transform.flip(image,True, False)
+        # screen.blit(image, (self.xpos, self.ypos))
 
         self.runningL = True
         self.runningR = False
@@ -52,22 +53,33 @@ class Player:
         self.queue = []
         self.runningR = True
         self.runningL = False
-        image = self.get_next(self.walkright_generator)
-        image = pygame.transform.scale(image, (299, 299))
-        if self.enemy:
-            image = pygame.transform.flip(image,True, False)   
-        screen.blit(image, (self.xpos, self.ypos))
+        # image = self.get_next(self.walkright_generator)
+        # image = pygame.transform.scale(image, (299, 299))
+        # if self.enemy:
+        #     image = pygame.transform.flip(image,True, False)
+        # screen.blit(image, (self.xpos, self.ypos))
 
-    
-    
-    def punchleft_sprite(self, screen):
+    def punch(self, p):
+
+        if (abs((self.xpos + self.size) - p.xpos) < 130) and not self.enemy:
+            if p.health >= 0:
+                print('ee')
+                p.health -= 10
+
+        elif (abs((self.xpos - self.size) - p.xpos) < 130) and self.enemy:
+            if p.health >= 0:
+                print('hh')
+                p.health -= 10
+
+    def punchleft_sprite(self, screen, p):
         self.queue = []
+        self.punch(p)
         image = self.get_next(self.punchleft_generator)
-        image = pygame.transform.scale(image, (299, 299))
-        if self.enemy:
-            image = pygame.transform.flip(image,True, False)   
-
-        screen.blit(image, (self.xpos, self.ypos))
+        # image = pygame.transform.scale(image, (299, 299))
+        # if self.enemy:
+        #     image = pygame.transform.flip(image,True, False)
+        #
+        #screen.blit(image, (self.xpos, self.ypos))
         self.queue.append(self.get_next(self.punchleft_generator))
         self.queue.append(self.get_next(self.punchleft_generator))
         self.queue.append(self.get_next(self.punchleft_generator))
@@ -76,6 +88,12 @@ class Player:
 
     def draw_player_frame(self, screen):
         if self.runningR:
+            if self.enemy:
+                #print("enemy")
+                pass
+            else:
+                #print("not")
+                pass
             image = self.get_next(self.walkright_generator)
             image = pygame.transform.scale(image, (299, 299))        
             
@@ -116,12 +134,12 @@ class Player:
         while i < len(self.walkright):
             #screen.blit(self.idle[i], (100, 50))
             if self.xpos + 6 < 800 and self.enemy == False:
-                self.xpos +=6
+                self.xpos +=4
             elif self.xpos - 3 > 0 and self.enemy == True:
-                self.xpos -=3
+                self.xpos -=4
             yield self.walkright[i]
             i = (i + 1) % len(self.walkright)
-            print(i)
+            #print(i)
 
 
     def punchleft_player(self):
@@ -130,7 +148,7 @@ class Player:
             #screen.blit(self.idle[i], (100, 50))
             yield self.punchleft[i]
             i = (i + 1) % len(self.punchleft)
-            print(i)
+            #print(i)
 
     def idle_player(self):
         i = 0

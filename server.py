@@ -2,17 +2,21 @@ import socket, threading
 import time
 import tcp_by_size
 
-from Player import Player
 
 IP = "0.0.0.0"
-PORT = 8000
+PORT = 8001
 all_to_die = False
+
+players = 0
 
 socks = []
 
 states = ['idle', 'idle']
 
 def handle_client(sock, player):
+
+    while players == 1:
+        print('Waiting')
 
     global all_to_die
 
@@ -43,6 +47,10 @@ def handle_client(sock, player):
                 reply = states[1]
             tcp_by_size.send_with_size(sock, reply)
 
+            # if player == 1:
+            #     states[0] = 'idle'
+            # else:
+            #     states[1] = 'idle'
 
 
             if finish:
@@ -62,12 +70,16 @@ def main():
     s = socket.socket()
     s.bind((IP, PORT))
     s.listen(2)
+
     currPlayer = 0
+    
     while True:
         cli_sock, addr = s.accept()
         t = threading.Thread(target=handle_client, args=(cli_sock, currPlayer))
         t.start()
         currPlayer += 1
+        global players
+        players += 1
 
 
 if __name__ == '__main__':

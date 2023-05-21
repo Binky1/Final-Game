@@ -1,10 +1,7 @@
 import os, sys, time
 import pygame
-import pickle
-
-from pygame.locals import *
 from Player import Player
-
+from pygame.locals import *
 import socket
 import tcp_by_size
 import threading
@@ -20,10 +17,13 @@ screen = pygame.display.set_mode((width, height))
 screen.fill((255, 255, 255))
 
 sock = socket.socket()
-sock.connect(("10.100.102.4", 8000))
+sock.connect(("127.0.0.1", 8001))
 
-p = Player(0, 500)
-p2 = Player(800, 500, True)
+
+
+p = Player()
+p2 = Player(300, 500, True)
+#p2 = Player(800, 500, True)
 queue = []
 
 
@@ -32,16 +32,20 @@ x = 0
 
 def send(state):
     tcp_by_size.send_with_size(sock, state)
-    if state == 'moveright':
+    if state == 'punch':
         global i
         i += 1
-        print('++++++++++++++++ ' + str(i))
+        print(i)
+    # if state == 'moveright':
+    #     global i
+    #     i += 1
+        # print('++++++++++++++++ ' + str(i))
     data = tcp_by_size.recv_by_size(sock)
-    if data == 'moveright':
-        global x
-        x += 1
-        print('++++++++++++++++ ' + str(x))
-
+    # print(data)
+    # if data == 'moveright':
+    #     global x
+    #     x += 1
+        # print('++++++++++++++++ ' + str(x))
     
     parse_protocol(p2, data, screen)
 
@@ -52,24 +56,28 @@ def draw_health(p: Player):
         color = (255,165,0)
     if p.health < 30:
         color = (255,0,0)
-    pygame.draw.rect(screen, color, pygame.Rect(30, 30, p.health * 2, 20))
-
+    if not p.enemy:
+        pygame.draw.rect(screen, color, pygame.Rect(30, 30, p.health * 2, 20))
+    else:
+        pygame.draw.rect(screen, color, pygame.Rect(780, 30, p.health * 2, 20))
+        
 def draw_screen(screen, p, p2):
     p.draw_player_frame(screen)
     p2.draw_player_frame(screen)
     draw_health(p)
+    draw_health(p2)
     pygame.display.flip()
 
 
 
 def parse_protocol(p2, data, screen):
     if data == 'punch':
-        p2.punchleft_sprite(screen)
+        p2.punchleft_sprite(screen, p)
     elif data == 'moveright':
         p2.walkright_sprite(screen)
     elif data == 'moveleft':
         p2.walk_back(screen)
-    else:
+    elif data == 'idle':
         p2.key_up()
 
 
@@ -81,7 +89,7 @@ def main():
     state = 'idle'
     # Game loop.
     while True:
-        print(frames)
+        # print(frames)
         screen.fill((0, 0, 0))
         #send_player(p)
         #p.do()
@@ -92,7 +100,8 @@ def main():
             elif event.type == KEYDOWN:
                 if event.key == pygame.K_k:
                     state = 'punch'
-                    p.punchleft_sprite(screen)
+                    
+                    p.punchleft_sprite(screen, p2)
                 elif event.key == pygame.K_d:
                     state = 'moveright'
                     p.walkright_sprite(screen)
@@ -105,6 +114,8 @@ def main():
                 p.key_up()
 
         send(state)
+        if state == 'punch':
+            state = 'idle'
         draw_screen(screen, p, p2)
         fpsClock.tick(fps)
         frames += 1
