@@ -20,10 +20,9 @@ sock = socket.socket()
 sock.connect(("127.0.0.1", 8001))
 
 
-
+print('in')
 p = Player()
-p2 = Player(300, 500, True)
-#p2 = Player(800, 500, True)
+p2 = Player(800, 500, True)
 queue = []
 
 

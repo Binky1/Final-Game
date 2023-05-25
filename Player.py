@@ -6,6 +6,8 @@ class Player:
     def __init__(self, xpos=-120, ypos=500, enemy = False):
         # xy pos, sprites for movement
         self.size = 120
+        self.timeout = 0
+
 
         self.xpos = xpos
         self.ypos = ypos
@@ -18,6 +20,9 @@ class Player:
         self.walkright = [self.sprite.parse_sprite('__Boxing04_Walk_000.png'), self.sprite.parse_sprite('__Boxing04_Walk_001.png'), self.sprite.parse_sprite('__Boxing04_Walk_002.png'),self.sprite.parse_sprite('__Boxing04_Walk_003.png'), self.sprite.parse_sprite('__Boxing04_Walk_004.png'),self.sprite.parse_sprite('__Boxing04_Walk_005.png'), self.sprite.parse_sprite('__Boxing04_Walk_006.png'), self.sprite.parse_sprite('__Boxing04_Walk_007.png'), self.sprite.parse_sprite('__Boxing04_Walk_008.png'),self.sprite.parse_sprite('__Boxing04_Walk_009.png')]
         self.sprite = Spritesheet('walkback.png')
         self.walkleft = [self.sprite.parse_sprite('__Boxing04_WalkBack_000.png'), self.sprite.parse_sprite('__Boxing04_WalkBack_001.png'), self.sprite.parse_sprite('__Boxing04_WalkBack_002.png'),self.sprite.parse_sprite('__Boxing04_WalkBack_003.png'), self.sprite.parse_sprite('__Boxing04_WalkBack_004.png'),self.sprite.parse_sprite('__Boxing04_WalkBack_005.png'), self.sprite.parse_sprite('__Boxing04_WalkBack_006.png'), self.sprite.parse_sprite('__Boxing04_WalkBack_007.png'), self.sprite.parse_sprite('__Boxing04_WalkBack_008.png'),self.sprite.parse_sprite('__Boxing04_WalkBack_009.png')]
+        self.sprite = Spritesheet('dizzy.png')
+        self.dizzy = [self.sprite.parse_sprite('__Boxing04_Dizzy_000.png'), self.sprite.parse_sprite('__Boxing04_Dizzy_001.png'), self.sprite.parse_sprite('__Boxing04_Dizzy_002.png'),self.sprite.parse_sprite('__Boxing04_Dizzy_003.png'), self.sprite.parse_sprite('__Boxing04_Dizzy_004.png'),self.sprite.parse_sprite('__Boxing04_Dizzy_005.png'), self.sprite.parse_sprite('__Boxing04_Dizzy_006.png'), self.sprite.parse_sprite('__Boxing04_Dizzy_007.png')]
+        
         self.runningL = False
         self.runningR = False
 
@@ -31,6 +36,7 @@ class Player:
         self.walkleft_generator = self.walkleft_player()
         self.idle_generator = self.idle_player()
         self.punchleft_generator = self.punchleft_player()
+        self.dizzy_generator = self.dizzy_player()
 
 
 
@@ -60,20 +66,26 @@ class Player:
         # screen.blit(image, (self.xpos, self.ypos))
 
     def punch(self, p):
-
         if (abs((self.xpos + self.size) - p.xpos) < 130) and not self.enemy:
             if p.health >= 0:
                 print('ee')
                 p.health -= 10
+            if p.health > 0 and p.health <= 10:
+                p.dizzy_sprite()
+
 
         elif (abs((self.xpos - self.size) - p.xpos) < 130) and self.enemy:
             if p.health >= 0:
                 print('hh')
                 p.health -= 10
+            if p.health > 0 and p.health <= 10:
+                p.dizzy_sprite()
 
     def punchleft_sprite(self, screen, p):
         self.queue = []
-        self.punch(p)
+        if self.timeout < 0:
+            self.punch(p)
+            self.timeout = 5
         image = self.get_next(self.punchleft_generator)
         # image = pygame.transform.scale(image, (299, 299))
         # if self.enemy:
@@ -86,7 +98,41 @@ class Player:
         self.queue.append(self.get_next(self.punchleft_generator))
         self.queue.append(self.get_next(self.punchleft_generator))
 
+    
+    def dizzy_sprite(self):
+        self.queue = []
+        
+        image = self.get_next(self.dizzy_generator)
+        # image = pygame.transform.scale(image, (299, 299))
+        # if self.enemy:
+        #     image = pygame.transform.flip(image,True, False)
+        #
+        #screen.blit(image, (self.xpos, self.ypos))
+        self.queue.append(self.get_next(self.dizzy_generator))
+        self.queue.append(self.get_next(self.dizzy_generator))
+        self.queue.append(self.get_next(self.dizzy_generator))
+        self.queue.append(self.get_next(self.dizzy_generator))
+        self.queue.append(self.get_next(self.dizzy_generator))
+        self.queue.append(self.get_next(self.dizzy_generator))
+        self.queue.append(self.get_next(self.dizzy_generator))
+        self.queue.append(self.get_next(self.dizzy_generator))
+        self.queue.append(self.get_next(self.dizzy_generator))
+        self.queue.append(self.get_next(self.dizzy_generator))
+        self.queue.append(self.get_next(self.dizzy_generator))
+        self.queue.append(self.get_next(self.dizzy_generator))
+        self.queue.append(self.get_next(self.dizzy_generator))
+        self.queue.append(self.get_next(self.dizzy_generator))
+        self.queue.append(self.get_next(self.dizzy_generator))
+        self.queue.append(self.get_next(self.dizzy_generator))
+        self.queue.append(self.get_next(self.dizzy_generator))
+        self.queue.append(self.get_next(self.dizzy_generator))
+        self.queue.append(self.get_next(self.dizzy_generator))
+        self.queue.append(self.get_next(self.dizzy_generator))
+        
+
     def draw_player_frame(self, screen):
+
+        self.timeout -= 1
         if self.runningR:
             if self.enemy:
                 #print("enemy")
@@ -148,6 +194,14 @@ class Player:
             #screen.blit(self.idle[i], (100, 50))
             yield self.punchleft[i]
             i = (i + 1) % len(self.punchleft)
+            #print(i)
+
+    def dizzy_player(self):
+        i = 0
+        while i < len(self.dizzy):
+            #screen.blit(self.idle[i], (100, 50))
+            yield self.dizzy[i]
+            i = (i + 1) % len(self.dizzy)
             #print(i)
 
     def idle_player(self):
