@@ -1,0 +1,92 @@
+{"frames": {
+
+"__Boxing04_KO_000.png":
+{
+	"frame": {"x":0,"y":0,"w":499,"h":489},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":499,"h":489},
+	"sourceSize": {"w":499,"h":489}
+},
+"__Boxing04_KO_001.png":
+{
+	"frame": {"x":499,"y":0,"w":499,"h":489},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":499,"h":489},
+	"sourceSize": {"w":499,"h":489}
+},
+"__Boxing04_KO_002.png":
+{
+	"frame": {"x":998,"y":0,"w":499,"h":489},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":499,"h":489},
+	"sourceSize": {"w":499,"h":489}
+},
+"__Boxing04_KO_003.png":
+{
+	"frame": {"x":1497,"y":0,"w":499,"h":489},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":499,"h":489},
+	"sourceSize": {"w":499,"h":489}
+},
+"__Boxing04_KO_004.png":
+{
+	"frame": {"x":0,"y":489,"w":499,"h":489},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":499,"h":489},
+	"sourceSize": {"w":499,"h":489}
+},
+"__Boxing04_KO_005.png":
+{
+	"frame": {"x":499,"y":489,"w":499,"h":489},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":499,"h":489},
+	"sourceSize": {"w":499,"h":489}
+},
+"__Boxing04_KO_006.png":
+{
+	"frame": {"x":998,"y":489,"w":499,"h":489},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":499,"h":489},
+	"sourceSize": {"w":499,"h":489}
+},
+"__Boxing04_KO_007.png":
+{
+	"frame": {"x":1497,"y":489,"w":499,"h":489},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":499,"h":489},
+	"sourceSize": {"w":499,"h":489}
+},
+"__Boxing04_KO_008.png":
+{
+	"frame": {"x":0,"y":978,"w":499,"h":489},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":499,"h":489},
+	"sourceSize": {"w":499,"h":489}
+},
+"__Boxing04_KO_009.png":
+{
+	"frame": {"x":499,"y":978,"w":499,"h":489},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":499,"h":489},
+	"sourceSize": {"w":499,"h":489}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "ko.png",
+	"format": "RGBA8888",
+	"size": {"w":1996,"h":1467},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:2195ccf6df2e290a6976b33cbe0ce464:205b16e79a4ebecd5793ddd2156549fd:2aecfdc61d99da9fc4d053a93f6d8493$"
+}
+}
