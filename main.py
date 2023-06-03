@@ -11,6 +11,8 @@ pygame.init()
  
 fps = 25
 fpsClock = pygame.time.Clock()
+
+SMALLFONT = pygame.font.SysFont('Corbel',35)
  
 width, height = 1000, 800
 screen = pygame.display.set_mode((width, height))
@@ -86,16 +88,56 @@ def parse_protocol(p2, data, screen):
         p2.state = 'idle'
         p2.key_up()
 
+def menu():
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    #TODO send server message that intialize the game in the server
+                    main()
+
+        screen.fill((0, 0, 0))
+        text = SMALLFONT.render('Press SPACE To Start' , True , (255,255,255))
+        screen.blit(text, (width/2-130, height/2-20))
+        pygame.display.flip()
+
+
+
+
+def GameOver():
+
+    cont = True
+    if p.health == 0:
+        text = SMALLFONT.render('You Lose!', True, (255, 255, 255))
+    else:
+        text = SMALLFONT.render('You Win!', True, (255, 255, 255))
+    while cont:
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    cont = False
+        screen.fill((0,0,0))
+        screen.blit(text, (width / 2 - 130, height / 2 - 20))
+        pygame.display.flip()
+
 
 
 def main():
     
-    
+
+    gameOver = False
     frames = 1
     state = 'idle'
     # Game loop.
     tcp_by_size.send_with_size(sock, state)
-    while True:
+    while not p.gameover:
         # print(frames)
         screen.fill((0, 0, 0))
         #send_player(p)
@@ -108,7 +150,7 @@ def main():
                 if event.key == pygame.K_k:
                     state = 'punch'
                     p.state = state
-                    p.punchleft_sprite(screen, p2)
+                    gameOver = p.punchleft_sprite(screen, p2)
                 elif event.key == pygame.K_SPACE:
                     state = 'block'
                     p.state = state
@@ -138,9 +180,10 @@ def main():
         draw_screen(screen, p, p2)
         fpsClock.tick(fps)
         frames += 1
-        
+    print('end')
+    GameOver()
     
 
 
 if __name__ == '__main__':
-    main()
+    menu()

@@ -5,8 +5,15 @@ class Player:
 
     def __init__(self, xpos=-120, ypos=500, enemy = False):
         # xy pos, sprites for movement
+        self.enemy = enemy
         self.size = 120
         self.timeout = 0
+
+
+        #temp
+        self.gameover = False
+
+
 
         self.maxxpos = 800
 
@@ -14,20 +21,27 @@ class Player:
         self.ypos = ypos
         self.health = 100
 
-
-        self.idle = self.create_sprite_list('Idle', 10)
-        self.punchleft = self.create_sprite_list('PunchLeft', 6)
-        self.walkright = self.create_sprite_list('Walk', 10)
-        self.walkback = self.create_sprite_list('WalkBack', 10)
-        self.dizzy = self.create_sprite_list('Dizzy', 8)
-        self.block = self.create_sprite_list('Blocking', 10)
-        self.ko = self.create_sprite_list('KO', 10)
-
+        if self.enemy:
+            self.idle = self.create_sprite_list('Idle', 10)
+            self.punchleft = self.create_sprite_list('PunchLeft', 6)
+            self.walkright = self.create_sprite_list('Walk', 10)
+            self.walkback = self.create_sprite_list('WalkBack', 10)
+            self.dizzy = self.create_sprite_list('Dizzy', 8)
+            self.block = self.create_sprite_list('Blocking', 10)
+            self.ko = self.create_sprite_list('KO', 10)
+        else:
+            self.idle = self.create_sprite_list('Idle2', 10)
+            self.punchleft = self.create_sprite_list('PunchLeft2', 6)
+            self.walkright = self.create_sprite_list('Walk2', 10)
+            self.walkback = self.create_sprite_list('WalkBack2', 10)
+            self.dizzy = self.create_sprite_list('Dizzy2', 8)
+            self.block = self.create_sprite_list('Blocking2', 10)
+            self.ko = self.create_sprite_list('KO2', 10)
 
         self.runningL = False
         self.runningR = False
 
-        self.enemy = enemy
+
         self.queue = []
 
         self.state = 'idle'
@@ -47,7 +61,7 @@ class Player:
     def create_sprite_list(self, filename, frames) -> list:
         try:
             sheet = Spritesheet(f'{filename}.png')
-            return [sheet.parse_sprite(f"__Boxing04_{filename}_{str(i).zfill(3)}.png") for i in range(frames)]
+            return [sheet.parse_sprite(f"__Boxing04_{filename.replace('2','')}_{str(i).zfill(3)}.png") for i in range(frames)]
             # lst = []
             # for i in range(frames):
             #     try:
@@ -96,7 +110,8 @@ class Player:
 
             if p.health == 0:
                 p.KO_sprite()
-                print()
+                self.gameover = True
+                return True
             elif p.health > 0 and p.health <= 10:
                 p.dizzy_sprite()
 
@@ -107,13 +122,17 @@ class Player:
 
             if p.health == 0:
                 p.KO_sprite()
+                p.gameover = True
+                return True
             elif p.health > 0 and p.health <= 10:
                 p.dizzy_sprite()
 
-    def punchleft_sprite(self, screen, p):
+        return False
+
+    def punchleft_sprite(self, screen, p) -> bool:
         if self.timeout < 0:
             self.queue = []
-            self.punch(p)
+            gameState = self.punch(p)
             self.timeout = 35
             image = self.get_next(self.punchleft_generator)
             # image = pygame.transform.scale(image, (299, 299))
@@ -126,6 +145,8 @@ class Player:
             self.queue.append(self.get_next(self.punchleft_generator))
             self.queue.append(self.get_next(self.punchleft_generator))
             self.queue.append(self.get_next(self.punchleft_generator))
+            return gameState
+        return False
 
 
     def block_sprite(self):
