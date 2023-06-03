@@ -94,6 +94,7 @@ def main():
     frames = 1
     state = 'idle'
     # Game loop.
+    tcp_by_size.send_with_size(sock, state)
     while True:
         # print(frames)
         screen.fill((0, 0, 0))
@@ -120,6 +121,10 @@ def main():
                     state = 'moveleft'
                     p.state = state
                     p.walk_back(screen)
+                else:
+                    state = 'idle'
+                    p.state = state
+                    p.key_up()
 
             elif event.type == KEYUP:
                 state = 'idle'
