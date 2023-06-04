@@ -1,0 +1,92 @@
+{"frames": {
+
+"__Boxing04_Blocking_000.png":
+{
+	"frame": {"x":0,"y":0,"w":499,"h":489},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":499,"h":489},
+	"sourceSize": {"w":499,"h":489}
+},
+"__Boxing04_Blocking_001.png":
+{
+	"frame": {"x":499,"y":0,"w":499,"h":489},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":499,"h":489},
+	"sourceSize": {"w":499,"h":489}
+},
+"__Boxing04_Blocking_002.png":
+{
+	"frame": {"x":998,"y":0,"w":499,"h":489},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":499,"h":489},
+	"sourceSize": {"w":499,"h":489}
+},
+"__Boxing04_Blocking_003.png":
+{
+	"frame": {"x":1497,"y":0,"w":499,"h":489},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":499,"h":489},
+	"sourceSize": {"w":499,"h":489}
+},
+"__Boxing04_Blocking_004.png":
+{
+	"frame": {"x":0,"y":489,"w":499,"h":489},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":499,"h":489},
+	"sourceSize": {"w":499,"h":489}
+},
+"__Boxing04_Blocking_005.png":
+{
+	"frame": {"x":499,"y":489,"w":499,"h":489},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":499,"h":489},
+	"sourceSize": {"w":499,"h":489}
+},
+"__Boxing04_Blocking_006.png":
+{
+	"frame": {"x":998,"y":489,"w":499,"h":489},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":499,"h":489},
+	"sourceSize": {"w":499,"h":489}
+},
+"__Boxing04_Blocking_007.png":
+{
+	"frame": {"x":1497,"y":489,"w":499,"h":489},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":499,"h":489},
+	"sourceSize": {"w":499,"h":489}
+},
+"__Boxing04_Blocking_008.png":
+{
+	"frame": {"x":0,"y":978,"w":499,"h":489},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":499,"h":489},
+	"sourceSize": {"w":499,"h":489}
+},
+"__Boxing04_Blocking_009.png":
+{
+	"frame": {"x":499,"y":978,"w":499,"h":489},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":499,"h":489},
+	"sourceSize": {"w":499,"h":489}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "Blocking2.png",
+	"format": "RGBA8888",
+	"size": {"w":1996,"h":1467},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:5fae8b7db1a207d069d7eb90b0424710:2b1dd821170b0c8e1a9239ec06ff0ffd:318e72587036dbdad7f5e2e617edee12$"
+}
+}
