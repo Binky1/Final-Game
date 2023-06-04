@@ -15,8 +15,21 @@ states = ['idle', 'idle']
 
 def handle_client(sock, player):
 
+    ready = tcp_by_size.recv_by_size(sock)
+    while ready != 'RADY':
+        ready = tcp_by_size.recv_by_size(sock)
+
+    global players
+    players += 1
+    print(players)
+    i = 1
     while players == 1:
         print('Waiting')
+        if i == 1:
+            tcp_by_size.send_with_size(sock, 'WAIT')
+        i += 1
+
+    tcp_by_size.send_with_size(sock, 'STRT')
 
     global all_to_die
 
@@ -81,8 +94,8 @@ def main():
         t = threading.Thread(target=handle_client, args=(cli_sock, currPlayer))
         t.start()
         currPlayer += 1
-        global players
-        players += 1
+        # global players
+        # players += 1
 
 
 if __name__ == '__main__':

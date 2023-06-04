@@ -29,6 +29,7 @@ class Player:
             self.dizzy = self.create_sprite_list('Dizzy', 8)
             self.block = self.create_sprite_list('Blocking', 10)
             self.ko = self.create_sprite_list('KO', 10)
+            self.hurt = self.create_sprite_list('Hurt', 8)
         else:
             self.idle = self.create_sprite_list('Idle2', 10)
             self.punchleft = self.create_sprite_list('PunchLeft2', 6)
@@ -37,6 +38,7 @@ class Player:
             self.dizzy = self.create_sprite_list('Dizzy2', 8)
             self.block = self.create_sprite_list('Blocking2', 10)
             self.ko = self.create_sprite_list('KO2', 10)
+            self.hurt = self.create_sprite_list('Hurt2', 8)
 
         self.runningL = False
         self.runningR = False
@@ -55,6 +57,7 @@ class Player:
         self.dizzy_generator = self.dizzy_player()
         self.block_generator = self.block_player()
         self.ko_generator = self.ko_player()
+        self.hurt_generator = self.hurt_player()
 
     def initialize_all(self, xpos=-120, ypos=500, enemy = False):
         self.enemy = enemy
@@ -153,6 +156,7 @@ class Player:
             if p.health >= 0:
                 print('ee')
                 p.health -= 10
+                p.hurt_sprite()
 
             if p.health == 0:
                 p.KO_sprite()
@@ -165,6 +169,7 @@ class Player:
             if p.health >= 0:
                 print('hh')
                 p.health -= 10
+                p.hurt_sprite()
 
             if p.health == 0:
                 p.KO_sprite()
@@ -220,6 +225,13 @@ class Player:
         self.queue.append(self.get_next(self.block_generator))
         self.queue.append(self.get_next(self.block_generator))
         self.queue.append(self.get_next(self.block_generator))
+
+    def hurt_sprite(self):
+        self.queue = []
+        image = self.get_next(self.hurt_generator)
+
+        for i in range(7):
+            self.queue.append(self.get_next(self.hurt_generator))
 
     def KO_sprite(self):
         self.queue = []
@@ -326,6 +338,14 @@ class Player:
             i = (i + 1) % len(self.walkright)
             #print(i)
 
+
+    def hurt_player(self):
+        i = 0
+        while i < len(self.hurt):
+            #screen.blit(self.idle[i], (100, 50))
+            yield self.hurt[i]
+            i = (i + 1) % len(self.hurt)
+            #print(i)
 
     def punchleft_player(self):
         i = 0

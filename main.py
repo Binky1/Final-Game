@@ -16,10 +16,14 @@ SMALLFONT = pygame.font.SysFont('Corbel',35)
  
 width, height = 1000, 800
 screen = pygame.display.set_mode((width, height))
+background_image = pygame.image.load("background.jpg").convert()
 screen.fill((255, 255, 255))
 
 sock = socket.socket()
 sock.connect(("127.0.0.1", 8001))
+
+
+waiting = ['Waiting For Players', 'Waiting For Players.', 'Waiting For Players..', 'Waiting For Players...']
 
 
 print('in')
@@ -31,6 +35,14 @@ queue = []
 i = 0
 x = 0
 
+
+def waiting_player():
+    i = 0
+    while i < len(waiting):
+        # screen.blit(self.idle[i], (100, 50))
+        yield waiting[i]
+        i = (i + 1) % len(waiting)
+        # print(i)
 def reset_players(p, p2):
     p.initialize_all()
     p2.initialize_all(800, 500, True)
@@ -130,64 +142,81 @@ def GameOver():
                     cont = False
         screen.fill((0,0,0))
         screen.blit(text, (width / 2 - 130, height / 2 - 20))
-        pygame.display.flip()
+        draw_screen(screen, p, p2)
     tcp_by_size.send_with_size(sock, 'NGME')
     reset_players(p,p2)
 
+def waiting_for_players(generator):
+    screen.fill((0, 0, 0))
+    text = next(generator)
+    text = SMALLFONT.render(text, True, (255, 255, 255))
+    screen.blit(text, (width / 2 - 130, height / 2 - 20))
+    pygame.display.flip()
 
+def recv_waiting(sock:socket.socket, data):
+    data = tcp_by_size.recv_by_size(sock)
 
 def main():
+    waiting_generator = waiting_player()
+    #send the player is ready
+    tcp_by_size.send_with_size(sock, 'RADY')
+    data = tcp_by_size.recv_by_size(sock)
+    while data == 'WAIT':
+        print(data)
+        waiting_for_players(waiting_generator)
+        data = tcp_by_size.recv_by_size(sock)
+        # t = threading.Thread(target=recv_waiting, args=(sock,data))
+        # t.start()
+    if data == 'STRT':
+        frames = 1
+        state = 'idle'
+        # Game loop.
+        tcp_by_size.send_with_size(sock, state)
+        while not p.gameover:
+            # print(frames)
+            screen.blit(background_image, (0, 0))
+            #send_player(p)
+            #p.do()
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif event.type == KEYDOWN:
+                    if event.key == pygame.K_k:
+                        state = 'punch'
+                        p.state = state
+                        p.punchleft_sprite(screen, p2)
+                    elif event.key == pygame.K_SPACE:
+                        state = 'block'
+                        p.state = state
+                        p.block_sprite()
+                    elif event.key == pygame.K_d:
+                        state = 'moveright'
+                        p.state = state
+                        p.walkright_sprite(p2.xpos)
+                    elif event.key == pygame.K_a:
+                        state = 'moveleft'
+                        p.state = state
+                        p.walk_back(screen)
+                    else:
+                        state = 'idle'
+                        p.state = state
+                        p.key_up()
 
-
-    frames = 1
-    state = 'idle'
-    # Game loop.
-    tcp_by_size.send_with_size(sock, state)
-    while not p.gameover:
-        # print(frames)
-        screen.fill((0, 0, 0))
-        #send_player(p)
-        #p.do()
-        for event in pygame.event.get():
-            if event.type == QUIT:
-                pygame.quit()
-                sys.exit()
-            elif event.type == KEYDOWN:
-                if event.key == pygame.K_k:
-                    state = 'punch'
-                    p.state = state
-                    p.punchleft_sprite(screen, p2)
-                elif event.key == pygame.K_SPACE:
-                    state = 'block'
-                    p.state = state
-                    p.block_sprite()
-                elif event.key == pygame.K_d:
-                    state = 'moveright'
-                    p.state = state
-                    p.walkright_sprite(p2.xpos)
-                elif event.key == pygame.K_a:
-                    state = 'moveleft'
-                    p.state = state
-                    p.walk_back(screen)
-                else:
+                elif event.type == KEYUP:
                     state = 'idle'
                     p.state = state
                     p.key_up()
 
-            elif event.type == KEYUP:
+            send(state)
+            if state == 'punch':
                 state = 'idle'
                 p.state = state
-                p.key_up()
-
-        send(state)
-        if state == 'punch':
-            state = 'idle'
-            p.state = state
-        draw_screen(screen, p, p2)
-        fpsClock.tick(fps)
-        frames += 1
-    print('end')
-    GameOver()
+            draw_screen(screen, p, p2)
+            fpsClock.tick(fps)
+            frames += 1
+        print('end')
+        GameOver()
     
 
 
