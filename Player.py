@@ -56,6 +56,52 @@ class Player:
         self.block_generator = self.block_player()
         self.ko_generator = self.ko_player()
 
+    def initialize_all(self, xpos=-120, ypos=500, enemy = False):
+        self.enemy = enemy
+        self.size = 120
+        self.timeout = 0
+
+        # temp
+        self.gameover = False
+
+        self.maxxpos = 800
+
+        self.xpos = xpos
+        self.ypos = ypos
+        self.health = 100
+
+        if self.enemy:
+            self.idle = self.create_sprite_list('Idle', 10)
+            self.punchleft = self.create_sprite_list('PunchLeft', 6)
+            self.walkright = self.create_sprite_list('Walk', 10)
+            self.walkback = self.create_sprite_list('WalkBack', 10)
+            self.dizzy = self.create_sprite_list('Dizzy', 8)
+            self.block = self.create_sprite_list('Blocking', 10)
+            self.ko = self.create_sprite_list('KO', 10)
+        else:
+            self.idle = self.create_sprite_list('Idle2', 10)
+            self.punchleft = self.create_sprite_list('PunchLeft2', 6)
+            self.walkright = self.create_sprite_list('Walk2', 10)
+            self.walkback = self.create_sprite_list('WalkBack2', 10)
+            self.dizzy = self.create_sprite_list('Dizzy2', 8)
+            self.block = self.create_sprite_list('Blocking2', 10)
+            self.ko = self.create_sprite_list('KO2', 10)
+
+        self.runningL = False
+        self.runningR = False
+
+        self.queue = []
+
+        self.state = 'idle'
+
+        # sprite generators for every movement
+        self.walkright_generator = self.walkright_player()
+        self.walkleft_generator = self.walkleft_player()
+        self.idle_generator = self.idle_player()
+        self.punchleft_generator = self.punchleft_player()
+        self.dizzy_generator = self.dizzy_player()
+        self.block_generator = self.block_player()
+        self.ko_generator = self.ko_player()
 
 
     def create_sprite_list(self, filename, frames) -> list:

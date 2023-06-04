@@ -31,6 +31,10 @@ queue = []
 i = 0
 x = 0
 
+def reset_players(p, p2):
+    p.initialize_all()
+    p2.initialize_all(800, 500, True)
+
 def send(state):
     tcp_by_size.send_with_size(sock, state)
     if state == 'punch':
@@ -111,6 +115,7 @@ def menu():
 def GameOver():
 
     cont = True
+    global p, p2
     if p.health == 0:
         text = SMALLFONT.render('You Lose!', True, (255, 255, 255))
     else:
@@ -126,13 +131,14 @@ def GameOver():
         screen.fill((0,0,0))
         screen.blit(text, (width / 2 - 130, height / 2 - 20))
         pygame.display.flip()
+    tcp_by_size.send_with_size(sock, 'NGME')
+    reset_players(p,p2)
 
 
 
 def main():
-    
 
-    gameOver = False
+
     frames = 1
     state = 'idle'
     # Game loop.
@@ -150,7 +156,7 @@ def main():
                 if event.key == pygame.K_k:
                     state = 'punch'
                     p.state = state
-                    gameOver = p.punchleft_sprite(screen, p2)
+                    p.punchleft_sprite(screen, p2)
                 elif event.key == pygame.K_SPACE:
                     state = 'block'
                     p.state = state

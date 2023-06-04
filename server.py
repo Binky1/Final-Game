@@ -39,7 +39,10 @@ def handle_client(sock, player):
                 print('Seems client disconnected')
                 break
             else:
-                states[player] = data
+                if data == 'NGME':
+                    states[player] = 'idle'
+                else:
+                    states[player] = data
 
             if player == 1:
                 reply = states[0]
