@@ -181,23 +181,23 @@ class Player:
         return False
 
     def punchleft_sprite(self, screen, p) -> bool:
-        if self.timeout < 0:
-            self.queue = []
-            gameState = self.punch(p)
-            self.timeout = 35
-            image = self.get_next(self.punchleft_generator)
-            # image = pygame.transform.scale(image, (299, 299))
-            # if self.enemy:
-            #     image = pygame.transform.flip(image,True, False)
-            #
-            #screen.blit(image, (self.xpos, self.ypos))
-            self.queue.append(self.get_next(self.punchleft_generator))
-            self.queue.append(self.get_next(self.punchleft_generator))
-            self.queue.append(self.get_next(self.punchleft_generator))
-            self.queue.append(self.get_next(self.punchleft_generator))
-            self.queue.append(self.get_next(self.punchleft_generator))
-            return gameState
-        return False
+        # if self.timeout < 0:
+        self.queue = []
+        gameState = self.punch(p)
+        self.timeout = 35
+        image = self.get_next(self.punchleft_generator)
+        # image = pygame.transform.scale(image, (299, 299))
+        # if self.enemy:
+        #     image = pygame.transform.flip(image,True, False)
+        #
+        #screen.blit(image, (self.xpos, self.ypos))
+        self.queue.append(self.get_next(self.punchleft_generator))
+        self.queue.append(self.get_next(self.punchleft_generator))
+        self.queue.append(self.get_next(self.punchleft_generator))
+        self.queue.append(self.get_next(self.punchleft_generator))
+        self.queue.append(self.get_next(self.punchleft_generator))
+        return gameState
+        # return False
 
 
     def block_sprite(self):

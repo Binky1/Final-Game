@@ -128,10 +128,11 @@ def GameOver():
 
     cont = True
     global p, p2
+    screen.fill((0, 0, 0))
     if p.health == 0:
-        text = SMALLFONT.render('You Lose!', True, (255, 255, 255))
+        text = SMALLFONT.render('You Lose!', True, (255, 0, 0))
     else:
-        text = SMALLFONT.render('You Win!', True, (255, 255, 255))
+        text = SMALLFONT.render('You Win!', True, (50,205,50))
     while cont:
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -142,12 +143,12 @@ def GameOver():
                     cont = False
         screen.fill((0,0,0))
         screen.blit(text, (width / 2 - 130, height / 2 - 20))
-        draw_screen(screen, p, p2)
+        pygame.display.flip()
     tcp_by_size.send_with_size(sock, 'NGME')
     reset_players(p,p2)
 
 def waiting_for_players(generator):
-    screen.fill((0, 0, 0))
+    screen.fill((0, 10, 0))
     text = next(generator)
     text = SMALLFONT.render(text, True, (255, 255, 255))
     screen.blit(text, (width / 2 - 130, height / 2 - 20))
@@ -216,8 +217,15 @@ def main():
             fpsClock.tick(fps)
             frames += 1
         print('end')
+
+        # Complete the animation
+        while len(p.queue) > 0 or len(p2.queue) > 0:
+            screen.blit(background_image, (0, 0))
+            draw_screen(screen, p, p2)
+            fpsClock.tick(fps)
+        print("done")
         GameOver()
-    
+
 
 
 if __name__ == '__main__':
