@@ -17,7 +17,7 @@ ready_players = [False, False]
 def handle_client(sock, player):
 
     ready = tcp_by_size.recv_by_size(sock)
-    while ready != 'RADY':
+    while ready != 'READY':
         ready = tcp_by_size.recv_by_size(sock)
     ready_players[player] = True
     global players
@@ -29,7 +29,7 @@ def handle_client(sock, player):
             tcp_by_size.send_with_size(sock, 'WAIT')
         i += 1
 
-    tcp_by_size.send_with_size(sock, 'STRT')
+    tcp_by_size.send_with_size(sock, 'SSTART')
 
     global all_to_die
 
@@ -52,9 +52,10 @@ def handle_client(sock, player):
                 players -= 1
                 print('Seems client disconnected')
                 break
-            elif data == 'OVER':
+            elif data == 'GOVER':
                 break
             else:
+                if data == 'IDLE' or data == 'MOVEFORWD' or data == 'MOVEBACK' or data == 'BLOCK' or data == 'PUNCH':
                     states[player] = data
 
                     if player == 1:
@@ -62,6 +63,8 @@ def handle_client(sock, player):
                     else:
                         reply = states[1]
                     tcp_by_size.send_with_size(sock, reply)
+                else:
+                    tcp_by_size.send_with_size(sock, 'SERROR')
 
 
             # if player == 1:
@@ -90,14 +93,20 @@ def main():
     s.listen(2)
 
     currPlayer = 0
-    
+    threads = []
+
     while True:
         cli_sock, addr = s.accept()
         t = threading.Thread(target=handle_client, args=(cli_sock, currPlayer))
         t.start()
+        threads.append(t)
         currPlayer += 1
         # global players
         # players += 1
+    for t in threads:
+        t.join()
+    sys.exit()
+
 
 
 if __name__ == '__main__':

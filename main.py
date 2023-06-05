@@ -86,21 +86,24 @@ def draw_screen(screen, p, p2):
 
 
 def parse_protocol(p2, data, screen):
-    if data == 'punch':
+    if data == 'PUNCH':
         p2.state = 'punch'
         p2.punchleft_sprite(screen, p)
-    elif data == 'block':
+    elif data == 'BLOCK':
         p2.state = 'block'
         p2.block_sprite()
-    elif data == 'moveright':
+    elif data == 'MOVEFORWD':
         p2.state = 'moveright'
         p2.walkright_sprite(p.xpos)
-    elif data == 'moveleft':
+    elif data == 'MOVEBACK':
         p2.state = 'moveleft'
         p2.walk_back(screen)
-    elif data == 'idle':
+    elif data == 'IDLE':
         p2.state = 'idle'
         p2.key_up()
+    elif data == 'ERROR':
+        #continue
+        pass
 
 def menu():
 
@@ -129,7 +132,7 @@ def menu():
 
 def GameOver():
 
-    tcp_by_size.send_with_size(sock, 'OVER')
+    tcp_by_size.send_with_size(sock, 'GOVER')
     cont = True
     global p, p2
     screen.fill((0, 0, 0))
@@ -160,18 +163,18 @@ def main():
     print('in')
     # waiting_generator = waiting_player()
     #send the player is ready
-    tcp_by_size.send_with_size(sock, 'RADY')
+    tcp_by_size.send_with_size(sock, 'READY')
     data = tcp_by_size.recv_by_size(sock)
-    while data != 'WAIT' and data != 'STRT':
+    while data != 'WAIT' and data != 'SSTART':
         data = tcp_by_size.recv_by_size(sock)
         print(data)
     while data == 'WAIT':
         print(data)
         waiting_for_players()
         data = tcp_by_size.recv_by_size(sock)
-    if data == 'STRT':
+    if data == 'SSTART':
         frames = 1
-        state = 'idle'
+        state = 'IDLE'
         # Game loop.
         tcp_by_size.send_with_size(sock, state)
         while not p.gameover:
@@ -185,28 +188,28 @@ def main():
                     sys.exit()
                 elif event.type == KEYDOWN:
                     if event.key == pygame.K_k:
-                        state = 'punch'
+                        state = 'PUNCH'
                         p.state = state
                         p.punchleft_sprite(screen, p2)
                     elif event.key == pygame.K_SPACE:
-                        state = 'block'
+                        state = 'BLOCK'
                         p.state = state
                         p.block_sprite()
                     elif event.key == pygame.K_d:
-                        state = 'moveright'
+                        state = 'MOVEFORWD'
                         p.state = state
                         p.walkright_sprite(p2.xpos)
                     elif event.key == pygame.K_a:
-                        state = 'moveleft'
+                        state = 'MOVEBACK'
                         p.state = state
                         p.walk_back(screen)
                     else:
-                        state = 'idle'
+                        state = 'IDLE'
                         p.state = state
                         p.key_up()
 
                 elif event.type == KEYUP:
-                    state = 'idle'
+                    state = 'IDLE'
                     p.state = state
                     p.key_up()
 

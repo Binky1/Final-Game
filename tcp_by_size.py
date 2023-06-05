@@ -32,7 +32,7 @@ def recv_by_size(sock, return_type="string"):
                 data_to_print = data_to_print.decode()
             except (UnicodeDecodeError, AttributeError):
                 pass
-        #print(f"\nReceive({str_size})>>>{data_to_print}")
+        print(f"\nReceive({str_size})>>>{data_to_print}")
 
     if data_len != len(data):
         data = b""  # Partial data is like no data !
@@ -57,7 +57,7 @@ def send_with_size(sock, data):
                 data = data.decode()
             except (UnicodeDecodeError, AttributeError):
                 pass
-        # print(f"\nSent({len_data})>>>{data}")
+        print(f"\nSent({len_data})>>>{data}")
 
 
 def __hex(s):
