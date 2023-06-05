@@ -20,7 +20,7 @@ class Player:
 
         self.xpos = xpos
         self.ypos = ypos
-        self.health = 100
+        self.health = 20
 
         if self.enemy:
             self.idle = self.create_sprite_list('Idle', 10)
@@ -154,7 +154,7 @@ class Player:
 
     def punch(self, p):
         print(p.block_timeout)
-        if (abs((self.xpos + self.size) - p.xpos) < 130) and not self.enemy and p.block_timeout <= 15:
+        if (abs((self.xpos + self.size) - p.xpos) < 130) and not self.enemy and p.block_timeout <= 10:
             if p.health >= 0:
                 print('ee')
                 p.health -= 10
@@ -167,7 +167,7 @@ class Player:
             elif p.health > 0 and p.health <= 10:
                 p.dizzy_sprite()
 
-        elif (abs((self.xpos - self.size) - p.xpos) < 130) and self.enemy and (p.block_timeout <= 15):
+        elif (abs((self.xpos - self.size) - p.xpos) < 130) and self.enemy and (p.block_timeout <= 10):
             if p.health >= 0:
                 print('hh')
                 p.health -= 10

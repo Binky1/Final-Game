@@ -12,19 +12,19 @@ players = 0
 socks = []
 
 states = ['idle', 'idle']
+ready_players = [False, False]
 
 def handle_client(sock, player):
 
     ready = tcp_by_size.recv_by_size(sock)
     while ready != 'RADY':
         ready = tcp_by_size.recv_by_size(sock)
-
+    ready_players[player] = True
     global players
     players += 1
     print(players)
     i = 1
     while players == 1:
-        print('Waiting')
         if i == 1:
             tcp_by_size.send_with_size(sock, 'WAIT')
         i += 1
@@ -49,26 +49,28 @@ def handle_client(sock, player):
             data = tcp_by_size.recv_by_size(sock)  # todo improve it to recv by message size
             print(str(player) + ' ' + data)
             if data == '':
+                players -= 1
                 print('Seems client disconnected')
                 break
+            elif data == 'OVER':
+                break
             else:
-                if data == 'NGME':
-                    states[player] = 'idle'
-                else:
                     states[player] = data
 
-            if player == 1:
-                reply = states[0]
-            else:
-                reply = states[1]
-            tcp_by_size.send_with_size(sock, reply)
+                    if player == 1:
+                        reply = states[0]
+                    else:
+                        reply = states[1]
+                    tcp_by_size.send_with_size(sock, reply)
+
 
             # if player == 1:
             #     states[0] = 'idle'
             # else:
             #     states[1] = 'idle'
 
-
+            if players == 0:
+                finish = True
             if finish:
                 time.sleep(1)
                 break

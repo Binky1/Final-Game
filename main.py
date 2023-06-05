@@ -43,9 +43,7 @@ def waiting_player():
         yield waiting[i]
         i = (i + 1) % len(waiting)
         # print(i)
-def reset_players(p, p2):
-    p.initialize_all()
-    p2.initialize_all(800, 500, True)
+
 
 def send(state):
     tcp_by_size.send_with_size(sock, state)
@@ -106,6 +104,7 @@ def parse_protocol(p2, data, screen):
 
 def menu():
 
+
     while True:
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -114,7 +113,11 @@ def menu():
             elif event.type == KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     #TODO send server message that intialize the game in the server
+                    print('pressed')
                     main()
+                    sock.close()
+                    screen.quit()
+                    sys.exit()
 
         screen.fill((0, 0, 0))
         text = SMALLFONT.render('Press SPACE To Start' , True , (255,255,255))
@@ -126,13 +129,14 @@ def menu():
 
 def GameOver():
 
+    tcp_by_size.send_with_size(sock, 'OVER')
     cont = True
     global p, p2
     screen.fill((0, 0, 0))
     if p.health == 0:
-        text = SMALLFONT.render('You Lose!', True, (255, 0, 0))
+        text = SMALLFONT.render('You Lose! (SPACE)', True, (255, 0, 0))
     else:
-        text = SMALLFONT.render('You Win!', True, (50,205,50))
+        text = SMALLFONT.render('You Win! (SPACE)', True, (50,205,50))
     while cont:
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -144,30 +148,27 @@ def GameOver():
         screen.fill((0,0,0))
         screen.blit(text, (width / 2 - 130, height / 2 - 20))
         pygame.display.flip()
-    tcp_by_size.send_with_size(sock, 'NGME')
-    reset_players(p,p2)
 
-def waiting_for_players(generator):
+def waiting_for_players():
     screen.fill((0, 10, 0))
-    text = next(generator)
-    text = SMALLFONT.render(text, True, (255, 255, 255))
+    text = SMALLFONT.render('Waiting For Player', True, (255, 255, 255))
     screen.blit(text, (width / 2 - 130, height / 2 - 20))
     pygame.display.flip()
 
-def recv_waiting(sock:socket.socket, data):
-    data = tcp_by_size.recv_by_size(sock)
 
 def main():
-    waiting_generator = waiting_player()
+    print('in')
+    # waiting_generator = waiting_player()
     #send the player is ready
     tcp_by_size.send_with_size(sock, 'RADY')
     data = tcp_by_size.recv_by_size(sock)
+    while data != 'WAIT' and data != 'STRT':
+        data = tcp_by_size.recv_by_size(sock)
+        print(data)
     while data == 'WAIT':
         print(data)
-        waiting_for_players(waiting_generator)
+        waiting_for_players()
         data = tcp_by_size.recv_by_size(sock)
-        # t = threading.Thread(target=recv_waiting, args=(sock,data))
-        # t.start()
     if data == 'STRT':
         frames = 1
         state = 'idle'
@@ -225,6 +226,7 @@ def main():
             fpsClock.tick(fps)
         print("done")
         GameOver()
+        # tcp_by_size.send_with_size(sock, 'NGME')
 
 
 
