@@ -7,8 +7,9 @@ class Player:
         # xy pos, sprites for movement
         self.enemy = enemy
         self.size = 120
-        self.timeout = 0
 
+        self.punch_timeout = 0
+        self.block_timeout = 0
 
         #temp
         self.gameover = False
@@ -62,8 +63,9 @@ class Player:
     def initialize_all(self, xpos=-120, ypos=500, enemy = False):
         self.enemy = enemy
         self.size = 120
-        self.timeout = 0
 
+        self.punch_timeout = 0
+        self.block_timeout = 0
         # temp
         self.gameover = False
 
@@ -151,8 +153,8 @@ class Player:
         # screen.blit(image, (self.xpos, self.ypos))
 
     def punch(self, p):
-        print(p.state)
-        if (abs((self.xpos + self.size) - p.xpos) < 130) and not self.enemy and p.state != 'block':
+        print(p.block_timeout)
+        if (abs((self.xpos + self.size) - p.xpos) < 130) and not self.enemy and p.block_timeout <= 15:
             if p.health >= 0:
                 print('ee')
                 p.health -= 10
@@ -165,7 +167,7 @@ class Player:
             elif p.health > 0 and p.health <= 10:
                 p.dizzy_sprite()
 
-        elif (abs((self.xpos - self.size) - p.xpos) < 130) and self.enemy and p.state != 'block':
+        elif (abs((self.xpos - self.size) - p.xpos) < 130) and self.enemy and (p.block_timeout <= 15):
             if p.health >= 0:
                 print('hh')
                 p.health -= 10
@@ -181,50 +183,54 @@ class Player:
         return False
 
     def punchleft_sprite(self, screen, p) -> bool:
-        # if self.timeout < 0:
-        self.queue = []
-        gameState = self.punch(p)
-        self.timeout = 35
-        image = self.get_next(self.punchleft_generator)
-        # image = pygame.transform.scale(image, (299, 299))
-        # if self.enemy:
-        #     image = pygame.transform.flip(image,True, False)
-        #
-        #screen.blit(image, (self.xpos, self.ypos))
-        self.queue.append(self.get_next(self.punchleft_generator))
-        self.queue.append(self.get_next(self.punchleft_generator))
-        self.queue.append(self.get_next(self.punchleft_generator))
-        self.queue.append(self.get_next(self.punchleft_generator))
-        self.queue.append(self.get_next(self.punchleft_generator))
-        return gameState
-        # return False
+        if self.punch_timeout < 0:
+            self.queue = []
+            gameState = self.punch(p)
+            self.punch_timeout = 35
+            image = self.get_next(self.punchleft_generator)
+            # image = pygame.transform.scale(image, (299, 299))
+            # if self.enemy:
+            #     image = pygame.transform.flip(image,True, False)
+            #
+            #screen.blit(image, (self.xpos, self.ypos))
+            self.queue.append(self.get_next(self.punchleft_generator))
+            self.queue.append(self.get_next(self.punchleft_generator))
+            self.queue.append(self.get_next(self.punchleft_generator))
+            self.queue.append(self.get_next(self.punchleft_generator))
+            self.queue.append(self.get_next(self.punchleft_generator))
+            return gameState
+        return False
 
 
     def block_sprite(self):
-        self.queue = []
-        image = self.get_next(self.block_generator)
-        # image = pygame.transform.scale(image, (299, 299))
-        # if self.enemy:
-        #     image = pygame.transform.flip(image,True, False)
-        #
-        # screen.blit(image, (self.xpos, self.ypos))
-        self.queue.append(self.get_next(self.block_generator))
-        self.queue.append(self.get_next(self.block_generator))
-        self.queue.append(self.get_next(self.block_generator))
-        self.queue.append(self.get_next(self.block_generator))
-        self.queue.append(self.get_next(self.block_generator))
-        self.queue.append(self.get_next(self.block_generator))
-        self.queue.append(self.get_next(self.block_generator))
-        self.queue.append(self.get_next(self.block_generator))
+        if self.block_timeout < 0:
+            self.queue = []
+            self.block_timeout = 35
+            image = self.get_next(self.block_generator)
+            # image = pygame.transform.scale(image, (299, 299))
+            # if self.enemy:
+            #     image = pygame.transform.flip(image,True, False)
+            #
+            # screen.blit(image, (self.xpos, self.ypos))
+            self.queue.append(self.get_next(self.block_generator))
+            self.queue.append(self.get_next(self.block_generator))
+            self.queue.append(self.get_next(self.block_generator))
+            self.queue.append(self.get_next(self.block_generator))
+            self.queue.append(self.get_next(self.block_generator))
+            self.queue.append(self.get_next(self.block_generator))
+            self.queue.append(self.get_next(self.block_generator))
+            self.queue.append(self.get_next(self.block_generator))
 
-        self.queue.append(self.get_next(self.block_generator))
-        self.queue.append(self.get_next(self.block_generator))
-        self.queue.append(self.get_next(self.block_generator))
-        self.queue.append(self.get_next(self.block_generator))
-        self.queue.append(self.get_next(self.block_generator))
-        self.queue.append(self.get_next(self.block_generator))
-        self.queue.append(self.get_next(self.block_generator))
-        self.queue.append(self.get_next(self.block_generator))
+            self.queue.append(self.get_next(self.block_generator))
+            self.queue.append(self.get_next(self.block_generator))
+            self.queue.append(self.get_next(self.block_generator))
+            self.queue.append(self.get_next(self.block_generator))
+            self.queue.append(self.get_next(self.block_generator))
+            self.queue.append(self.get_next(self.block_generator))
+            self.queue.append(self.get_next(self.block_generator))
+            self.queue.append(self.get_next(self.block_generator))
+        else:
+            self.state = 'idle'
 
     def hurt_sprite(self):
         self.queue = []
@@ -283,7 +289,8 @@ class Player:
 
     def draw_player_frame(self, screen):
 
-        self.timeout -= 1
+        self.punch_timeout -= 1
+        self.block_timeout -= 1
         if self.runningR:
             if self.enemy:
                 #print("enemy")

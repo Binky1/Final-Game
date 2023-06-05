@@ -52,7 +52,7 @@ def send(state):
     if state == 'punch':
         global i
         i += 1
-        print(i)
+        # print(i)
     # if state == 'moveright':
     #     global i
     #     i += 1
